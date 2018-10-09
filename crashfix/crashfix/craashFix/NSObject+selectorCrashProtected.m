@@ -7,6 +7,7 @@
 //
 
 #import "NSObject+selectorCrashProtected.h"
+#import "NSObject+Runtime.h"
 #import <objc/runtime.h>
 
 char * const ZBaymaxProtectorName = "ZBaymaxProtector";
@@ -18,23 +19,19 @@ id baymaxProtected(id self, SEL sel){
 @implementation NSObject (selectorCrashProtected)
 +(void)load{
     
-    Method systemMethod = class_getInstanceMethod([self class], @selector(forwardingTargetForSelector:));
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self swizzleInstanceMethodWithOrginalSel:@selector(forwardingTargetForSelector:) swizzledSel:@selector(bayMax_forwardingTargetForSelector:)];
+        
+        [self swizzleInstanceMethodWithOrginalSel:@selector(addObserver:forKeyPath:options:context:) swizzledSel:@selector(baymax_addObserver:forKeyPath:options:context:)];
+    });
     
-    Method newMethod = class_getInstanceMethod([self class], @selector(bayMax_forwardingTargetForSelector:));
-    
-    // class_addMethod:如果发现方法已经存在，会失败返回，也可以用来做检查用,我们这里是为了避免源方法没有实现的情况;如果方法没有存在,我们则先尝试添加被替换的方法的实现
-    BOOL addMethod = class_addMethod([self class], @selector(forwardingTargetForSelector:), method_getImplementation(newMethod), method_getTypeEncoding(newMethod));
-
-    if (addMethod) {
-        class_replaceMethod([self class], @selector(forwardingTargetForSelector:), method_getImplementation(systemMethod), method_getTypeEncoding(systemMethod));
-    }else{
-        method_exchangeImplementations(systemMethod, newMethod);
-    }
 }
 
 #pragma mark - Unrecognize Selector Protected
 - (id)bayMax_forwardingTargetForSelector:(SEL)aSelector{
-    if ([self isMethodOverWrite:[self class] selector:@selector(forwardInvocation:)]) {
+    if ([self isMethodOverWrite:[self class] selector:@selector(forwardInvocation:)] ||
+        ![NSObject isMainBundleClass:[self class]]) {
         return [self bayMax_forwardingTargetForSelector:aSelector];
     }
     NSLog(@"catch unrecognize selector crash %@ %@", self, NSStringFromSelector(aSelector));
@@ -48,6 +45,58 @@ id baymaxProtected(id self, SEL sel){
     
     return self.baymax;
 }
+
+#pragma mark - KVO Protected
+- (void)baymax_addObserver:(NSObject *)observer
+                forKeyPath:(NSString *)keyPath
+                   options:(NSKeyValueObservingOptions)options
+                   context:(void *)context {
+    if ([observer isKindOfClass:[CPKVODelegate class]]) {
+        return [self baymax_addObserver:observer
+                             forKeyPath:keyPath
+                                options:options
+                                context:context];
+    }
+    
+    if (keyPath.length == 0 || !observer) {
+        NSLog(@"Add Observer Error:Check KVO KeyPath OR Observer");
+        return;
+    }
+    
+    if (!self.kvoDelegate) {
+        self.kvoDelegate = [CPKVODelegate new];
+        self.kvoDelegate.weakObservedObject = self;
+    }
+    
+    CPKVODelegate *kvoDelegate = self.kvoDelegate;
+    NSMutableDictionary *kvoInfoMaps = kvoDelegate.kvoInfoMaps;
+    NSMutableArray *infoArray = kvoInfoMaps[keyPath];
+    CPKVOInfo *kvoInfo = [CPKVOInfo new];
+    kvoInfo.observer = observer;
+    
+    if (infoArray.count) {
+        BOOL didAddObserver = NO;
+        
+        for (CPKVOInfo *info in infoArray) {
+            if (info.observer == observer) {
+                didAddObserver = YES;
+                break;
+            }
+        }
+        
+        if (didAddObserver) {
+            NSLog(@"BaymaxKVOProtector:%@ Has added Already", observer);
+        } else {
+            [infoArray addObject:kvoInfo];
+        }
+    } else {
+        infoArray = [NSMutableArray new];
+        [infoArray addObject:kvoInfo];
+        kvoInfoMaps[keyPath] = infoArray;
+        [self baymax_addObserver:kvoDelegate forKeyPath:keyPath options:options context:context];
+    }
+}
+
 - (BOOL)isMethodOverWrite:(Class)classz selector:(SEL)sel{
     IMP classImp = class_getMethodImplementation(classz,sel);
     IMP superClassImp = class_getMethodImplementation([classz superclass],sel);

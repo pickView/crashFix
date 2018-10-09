@@ -16,6 +16,9 @@
 		9F65C038216B3236004B7D9C /* crashfixTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F65C037216B3236004B7D9C /* crashfixTests.m */; };
 		9F65C043216B3236004B7D9C /* crashfixUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F65C042216B3236004B7D9C /* crashfixUITests.m */; };
 		9F65C056216B415C004B7D9C /* NSObject+selectorCrashProtected.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F65C055216B415C004B7D9C /* NSObject+selectorCrashProtected.m */; };
+		9F65C059216C9647004B7D9C /* NSObject+Runtime.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F65C058216C9647004B7D9C /* NSObject+Runtime.m */; };
+		9F65C05C216CA810004B7D9C /* ZKVODelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F65C05B216CA810004B7D9C /* ZKVODelegate.m */; };
+		9F65C05F216CA9B7004B7D9C /* NSObject+KVOProtected.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F65C05E216CA9B7004B7D9C /* NSObject+KVOProtected.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +57,12 @@
 		9F65C044216B3236004B7D9C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9F65C054216B415C004B7D9C /* NSObject+selectorCrashProtected.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+selectorCrashProtected.h"; sourceTree = "<group>"; };
 		9F65C055216B415C004B7D9C /* NSObject+selectorCrashProtected.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+selectorCrashProtected.m"; sourceTree = "<group>"; };
+		9F65C057216C9647004B7D9C /* NSObject+Runtime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+Runtime.h"; sourceTree = "<group>"; };
+		9F65C058216C9647004B7D9C /* NSObject+Runtime.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Runtime.m"; sourceTree = "<group>"; };
+		9F65C05A216CA810004B7D9C /* ZKVODelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZKVODelegate.h; sourceTree = "<group>"; };
+		9F65C05B216CA810004B7D9C /* ZKVODelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZKVODelegate.m; sourceTree = "<group>"; };
+		9F65C05D216CA9B7004B7D9C /* NSObject+KVOProtected.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+KVOProtected.h"; sourceTree = "<group>"; };
+		9F65C05E216CA9B7004B7D9C /* NSObject+KVOProtected.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+KVOProtected.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,8 +148,14 @@
 		9F65C050216B3E53004B7D9C /* craashFix */ = {
 			isa = PBXGroup;
 			children = (
+				9F65C057216C9647004B7D9C /* NSObject+Runtime.h */,
+				9F65C058216C9647004B7D9C /* NSObject+Runtime.m */,
 				9F65C054216B415C004B7D9C /* NSObject+selectorCrashProtected.h */,
 				9F65C055216B415C004B7D9C /* NSObject+selectorCrashProtected.m */,
+				9F65C05D216CA9B7004B7D9C /* NSObject+KVOProtected.h */,
+				9F65C05E216CA9B7004B7D9C /* NSObject+KVOProtected.m */,
+				9F65C05A216CA810004B7D9C /* ZKVODelegate.h */,
+				9F65C05B216CA810004B7D9C /* ZKVODelegate.m */,
 			);
 			path = craashFix;
 			sourceTree = "<group>";
@@ -276,8 +291,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				9F65C023216B3234004B7D9C /* ViewController.m in Sources */,
+				9F65C059216C9647004B7D9C /* NSObject+Runtime.m in Sources */,
+				9F65C05F216CA9B7004B7D9C /* NSObject+KVOProtected.m in Sources */,
 				9F65C056216B415C004B7D9C /* NSObject+selectorCrashProtected.m in Sources */,
 				9F65C02E216B3236004B7D9C /* main.m in Sources */,
+				9F65C05C216CA810004B7D9C /* ZKVODelegate.m in Sources */,
 				9F65C020216B3234004B7D9C /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
