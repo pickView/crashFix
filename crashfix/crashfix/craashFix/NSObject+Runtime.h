@@ -12,10 +12,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSObject (Runtime)
 
+
++ (void)swizzleInstanceMethodWithOrginalSel:(SEL)oriSel swizzledSel:(SEL)swiSel;
+
 /**
  Determine if the class is custom
-
- @param class Class Name
+ 
+ @param  Class Name
  @return y or n
  */
 + (BOOL)isMainBundleClass:(Class)cls;
